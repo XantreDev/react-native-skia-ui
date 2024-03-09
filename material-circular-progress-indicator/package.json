@@ -1,0 +1,6 @@
+{
+  "react-native": "../src/material-circular-progress-indicator/index",
+  "main": "../lib/commonjs/material-circular-progress-indicator/index",
+  "module": "../lib/module/material-circular-progress-indicator/index",
+  "types": "../lib/typescript/material-circular-progress-indicator/index.d.ts"
+}

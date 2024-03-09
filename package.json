@@ -7,12 +7,29 @@
   "types": "lib/typescript/src/index.d.ts",
   "react-native": "src/index",
   "source": "src/index",
+  "exports": {
+    ".": {
+      "import": "./lib/module/index",
+      "require": "./lib/commonjs/index",
+      "types": "./lib/typescript/src/index.d.ts",
+      "react-native": "./src/index",
+      "source": "./src/index"
+    },
+    "./material-circular-progress-indicator": {
+      "import": "./lib/module/material-circular-progress-indicator/index",
+      "require": "./lib/commonjs/material-circular-progress-indicator/index",
+      "types": "./lib/typescript/src/material-circular-progress-indicator/index.d.ts",
+      "react-native": "./src/material-circular-progress-indicator/index",
+      "source": "./src/material-circular-progress-indicator/index"
+    }
+  },
   "files": [
     "src",
     "lib",
     "android",
     "ios",
     "cpp",
+    "material-circular-progress-indicator",
     "*.podspec",
     "!ios/build",
     "!android/build",
@@ -53,10 +70,12 @@
     "registry": "https://registry.npmjs.org/"
   },
   "devDependencies": {
+    "@babel/plugin-transform-flow-strip-types": "^7.23.3",
     "@commitlint/config-conventional": "^17.0.2",
     "@evilmartians/lefthook": "^1.5.0",
     "@react-native/eslint-config": "^0.73.1",
     "@release-it/conventional-changelog": "^5.0.0",
+    "@shopify/react-native-skia": "^0.1.241",
     "@types/jest": "^29.5.5",
     "@types/react": "^18.2.44",
     "commitlint": "^17.0.2",
@@ -69,6 +88,7 @@
     "react": "18.2.0",
     "react-native": "0.73.4",
     "react-native-builder-bob": "^0.20.0",
+    "react-native-reanimated": "^3.7.2",
     "release-it": "^15.0.0",
     "typescript": "^5.2.2"
   },
@@ -76,8 +96,10 @@
     "@types/react": "^18.2.44"
   },
   "peerDependencies": {
+    "@shopify/react-native-skia": ">=0.1.230",
     "react": "*",
-    "react-native": "*"
+    "react-native": "*",
+    "react-native-reanimated": ">=3.4.0"
   },
   "workspaces": [
     "example"
@@ -88,7 +110,10 @@
     "modulePathIgnorePatterns": [
       "<rootDir>/example/node_modules",
       "<rootDir>/lib/"
-    ]
+    ],
+    "moduleNameMapper": {
+      "^react-native-reanimated$": "<rootDir>/src/__mocks__/reanimated.ts"
+    }
   },
   "commitlint": {
     "extends": [
@@ -128,7 +153,8 @@
           "trailingComma": "es5",
           "useTabs": false
         }
-      ]
+      ],
+      "no-bitwise": "off"
     }
   },
   "eslintIgnore": [
@@ -155,5 +181,8 @@
         }
       ]
     ]
+  },
+  "dependencies": {
+    "type-fest": "^4.11.1"
   }
 }

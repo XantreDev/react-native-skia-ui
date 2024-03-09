@@ -1,18 +1,28 @@
 import * as React from 'react';
 
-import { StyleSheet, View, Text } from 'react-native';
-import { multiply } from 'react-native-skia-ui';
+import { StyleSheet, View } from 'react-native';
+import { MaterialCircularProgressIndicator } from '../../src/material-circular-progress-indicator';
+import { useSharedValue, withTiming } from 'react-native-reanimated';
 
 export default function App() {
-  const [result, setResult] = React.useState<number | undefined>();
-
+  const progress = useSharedValue(0);
   React.useEffect(() => {
-    multiply(3, 7).then(setResult);
-  }, []);
+    const id = setInterval(() => {
+      progress.value = withTiming(Math.random(), { duration: 1000 });
+    }, 1000);
 
+    return () => clearInterval(id);
+  });
   return (
     <View style={styles.container}>
-      <Text>Result: {result}</Text>
+      <MaterialCircularProgressIndicator
+        size={56}
+        valueColor="green"
+        strokeWidth={5}
+        strokeCap="round"
+        value={progress}
+      />
+      <MaterialCircularProgressIndicator size={40} valueColor="black" />
     </View>
   );
 }
@@ -21,11 +31,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
+    gap: 20,
     justifyContent: 'center',
   },
   box: {
     width: 60,
     height: 60,
+    backgroundColor: 'blue',
     marginVertical: 20,
   },
 });
