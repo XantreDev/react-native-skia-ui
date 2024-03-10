@@ -4,6 +4,10 @@ Cross platform UI primitives implemented with `@shopify/react-native-skia`.
 This library provides functionality of system UI components like `ActivityIndicator` for Android, IOS and Web.
 Components are ported from flutter and are implemented using `@shopify/react-native-skia` and `react-native-reanimated`.
 
+
+https://github.com/XantreGodlike/react-native-skia-ui/assets/57757211/3df2a22a-4dc0-4282-8f04-e3a16d361184
+
+
 ## Installation
 
 ```sh
