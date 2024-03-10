@@ -1,6 +1,6 @@
 {
   "name": "react-native-skia-ui",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Cross platform UI primitives implemented with `@shopify/react-native-skia`",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
