@@ -1,7 +1,10 @@
 import * as React from 'react';
 
-import { StyleSheet, View } from 'react-native';
-import { MaterialCircularProgressIndicator } from '../../src/material-circular-progress-indicator';
+import { StyleSheet, Text, View } from 'react-native';
+import {
+  DeterminateMaterialCircularProgressIndicator,
+  IndeterminateMaterialCircularProgressIndicator,
+} from 'react-native-skia-ui/material-circular-progress-indicator';
 import { useSharedValue, withTiming } from 'react-native-reanimated';
 
 export default function App() {
@@ -15,14 +18,34 @@ export default function App() {
   });
   return (
     <View style={styles.container}>
-      <MaterialCircularProgressIndicator
+      <Text>DeterminateMaterialCircularProgressIndicator</Text>
+      <DeterminateMaterialCircularProgressIndicator
         size={56}
         valueColor="green"
         strokeWidth={5}
         strokeCap="round"
         value={progress}
       />
-      <MaterialCircularProgressIndicator size={40} valueColor="black" />
+      <DeterminateMaterialCircularProgressIndicator
+        size={100}
+        valueColor="blue"
+        strokeWidth={4}
+        strokeCap="round"
+        value={progress}
+      />
+      <Text>IndeterminateMaterialCircularProgressIndicator</Text>
+      <IndeterminateMaterialCircularProgressIndicator
+        size={40}
+        valueColor="black"
+      />
+
+      <IndeterminateMaterialCircularProgressIndicator
+        size={100}
+        valueColor="red"
+        backgroundColor={'#f0f0f0'}
+        strokeWidth={8}
+        strokeCap="round"
+      />
     </View>
   );
 }

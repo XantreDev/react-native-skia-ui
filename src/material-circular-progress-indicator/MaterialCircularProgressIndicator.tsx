@@ -27,7 +27,7 @@ import Animated, {
   withSequence,
   withTiming,
 } from 'react-native-reanimated';
-import type { SetOptional } from 'type-fest';
+import type { SetNonNullable, SetOptional } from 'type-fest';
 import {
   K_INTERMEDIATE_CIRCULAR_DURATION,
   offsetTween,
@@ -152,7 +152,7 @@ const Content_ = ({
   }));
 
   useAnimatedReaction(
-    () => stopped.value,
+    () => stopped.value || value.value !== undefined,
     (shouldStop) => {
       if (shouldStop) {
         // stopping the animation
@@ -238,17 +238,35 @@ const Content_ = ({
   );
 };
 
+export type InternalOrSharedProps = OrPlainValueProp<
+  InternalProps,
+  | 'size'
+  | 'value'
+  | 'strokeWidth'
+  | 'backgroundColor'
+  | 'valueColor'
+  | 'stopped'
+>;
+
+export type DefaultedKeys = 'strokeWidth' | 'backgroundColor';
 export type MaterialCircularProgressIndicatorProps = SetOptional<
-  OrPlainValueProp<
-    InternalProps,
-    | 'size'
-    | 'value'
-    | 'strokeWidth'
-    | 'backgroundColor'
-    | 'valueColor'
-    | 'stopped'
-  >,
-  'strokeWidth' | 'stopped' | 'value' | 'backgroundColor'
+  InternalOrSharedProps,
+  DefaultedKeys | 'stopped' | 'value'
+>;
+/*
+type SetRequiredAndNonNullable<T, K extends keyof T> = SetRequired<
+  SetNonNullable<T, K>,
+  K
+>; */
+
+export type DeterminateMaterialCircularProgressIndicatorProps = SetOptional<
+  SetNonNullable<Omit<InternalOrSharedProps, 'stopped'>, 'value'>,
+  DefaultedKeys
+>;
+
+export type IndeterminateMaterialCircularProgressIndicatorProps = SetOptional<
+  Omit<InternalOrSharedProps, 'value'>,
+  DefaultedKeys | 'stopped'
 >;
 
 const useToSharedValueOptional = <T,>(
@@ -270,6 +288,13 @@ const useToSharedValue = <T,>(value: T | SharedValue<T>) =>
     return value;
   }, [value]);
 
+/**
+ *
+ * @description Component has two modes: determinate and indeterminate. Which are controlled by the `value` prop.
+ * If `value` is undefined, the progress indicator will be indeterminate.
+ * If `value` is a number between 0 and 1, the progress indicator will be determinate.
+ * Not all props applies to both modes. For more type safety, use `DeterminateMaterialCircularProgressIndicator` and `IndeterminateMaterialCircularProgressIndicator` instead.
+ */
 export const MaterialCircularProgressIndicator = (
   props: MaterialCircularProgressIndicatorProps
 ) => (
@@ -278,6 +303,34 @@ export const MaterialCircularProgressIndicator = (
     size={useToSharedValue(props.size)}
     value={useToSharedValue(props.value)}
     stopped={useToSharedValueOptional(props.stopped, false)}
+    strokeWidth={useToSharedValueOptional(props.strokeWidth, 4)}
+    backgroundColor={useToSharedValue(props.backgroundColor)}
+    valueColor={useToSharedValue(props.valueColor)}
+  />
+);
+
+export const IndeterminateMaterialCircularProgressIndicator = (
+  props: IndeterminateMaterialCircularProgressIndicatorProps
+) => (
+  <Content_
+    {...props}
+    size={useToSharedValue(props.size)}
+    value={useSharedValue(undefined)}
+    stopped={useToSharedValueOptional(props.stopped, false)}
+    strokeWidth={useToSharedValueOptional(props.strokeWidth, 4)}
+    backgroundColor={useToSharedValue(props.backgroundColor)}
+    valueColor={useToSharedValue(props.valueColor)}
+  />
+);
+
+export const DeterminateMaterialCircularProgressIndicator = (
+  props: DeterminateMaterialCircularProgressIndicatorProps
+) => (
+  <Content_
+    {...props}
+    size={useToSharedValue(props.size)}
+    value={useToSharedValue(props.value)}
+    stopped={useSharedValue(false)}
     strokeWidth={useToSharedValueOptional(props.strokeWidth, 4)}
     backgroundColor={useToSharedValue(props.backgroundColor)}
     valueColor={useToSharedValue(props.valueColor)}
