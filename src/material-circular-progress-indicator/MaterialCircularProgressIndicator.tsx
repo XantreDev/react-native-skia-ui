@@ -16,16 +16,10 @@ import React from 'react';
 import { StyleSheet } from 'react-native';
 import Animated, {
   clamp,
-  Easing,
-  isSharedValue,
   type SharedValue,
-  useAnimatedReaction,
   useAnimatedStyle,
   useDerivedValue,
   useSharedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
 } from 'react-native-reanimated';
 import type { SetNonNullable, SetOptional } from 'type-fest';
 import {
@@ -35,7 +29,12 @@ import {
   strokeHeadTween,
   strokeTailTween,
 } from './constants';
-import { rad2deg } from '../utils';
+import { rad2deg, type OrPlainValueProp } from '../utils';
+import {
+  useDuration,
+  useToSharedValue,
+  useToSharedValueOptional,
+} from '../hooks';
 
 type RenderCircularProgressProps = {
   backgroundColor: string | null;
@@ -108,16 +107,6 @@ const renderCircularProgressIndicator = (
   canvas.drawArc(arcRect, rad2deg(arcStart), rad2deg(arcSweep), false, paint);
 };
 
-type OrPlainValueProp<
-  T extends Record<string, unknown>,
-  TKeys extends keyof T,
-> = {
-  [K in keyof T]: K extends TKeys
-    ? T[K] extends SharedValue<infer V>
-      ? V | SharedValue<Exclude<V, undefined>>
-      : T[K]
-    : T[K];
-};
 type InternalProps = {
   size: SharedValue<number>;
   /**
@@ -145,51 +134,18 @@ const Content_ = ({
   stopped,
   strokeAlign,
 }: InternalProps) => {
-  const animationValue = useSharedValue(0);
   const size = useDerivedValue(() => ({
     width: _size.value,
     height: _size.value,
   }));
 
-  useAnimatedReaction(
-    () => stopped.value || value.value !== undefined,
-    (shouldStop) => {
-      if (shouldStop) {
-        // stopping the animation
-        animationValue.value = animationValue.value;
-        return;
-      }
-      if (animationValue.value === 0) {
-        animationValue.value = withRepeat(
-          withTiming(1, {
-            duration: K_INTERMEDIATE_CIRCULAR_DURATION,
-            easing: Easing.linear,
-          }),
-          -1
-        );
-        return;
-      }
-
-      const remainingTime =
-        K_INTERMEDIATE_CIRCULAR_DURATION * (1 - animationValue.value);
-
-      animationValue.value = withSequence(
-        withTiming(1, {
-          duration: remainingTime,
-          easing: Easing.linear,
-        }),
-        0,
-        withRepeat(
-          withTiming(1, {
-            duration: K_INTERMEDIATE_CIRCULAR_DURATION,
-            easing: Easing.linear,
-          }),
-          -1
-        )
-      );
-    },
-    [stopped]
-  );
+  const animationValue = useDuration({
+    stopped: useDerivedValue(
+      () => stopped.value || value.value !== undefined,
+      [stopped, value]
+    ),
+    timing: K_INTERMEDIATE_CIRCULAR_DURATION,
+  });
 
   const headValue = useDerivedValue(() =>
     strokeHeadTween(animationValue.value)
@@ -268,25 +224,6 @@ export type IndeterminateMaterialCircularProgressIndicatorProps = SetOptional<
   Omit<InternalOrSharedProps, 'value'>,
   DefaultedKeys | 'stopped'
 >;
-
-const useToSharedValueOptional = <T,>(
-  value: T | SharedValue<T> | undefined,
-  defaultValue: T
-) =>
-  useDerivedValue(() => {
-    if (isSharedValue(value)) {
-      return value.value;
-    }
-    return value ?? defaultValue;
-  }, [value, defaultValue]);
-
-const useToSharedValue = <T,>(value: T | SharedValue<T>) =>
-  useDerivedValue(() => {
-    if (isSharedValue(value)) {
-      return value.value;
-    }
-    return value;
-  }, [value]);
 
 /**
  *

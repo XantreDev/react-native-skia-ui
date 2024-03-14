@@ -21,6 +21,13 @@
       "types": "./lib/typescript/src/material-circular-progress-indicator/index.d.ts",
       "react-native": "./src/material-circular-progress-indicator/index",
       "source": "./src/material-circular-progress-indicator/index"
+    },
+    "./cupertino-activity-indicator": {
+      "import": "./lib/module/cupertino-activity-indicator/index",
+      "require": "./lib/commonjs/cupertino-activity-indicator/index",
+      "types": "./lib/typescript/src/cupertino-activity-indicator/index.d.ts",
+      "react-native": "./src/cupertino-activity-indicator/index",
+      "source": "./src/cupertino-activity-indicator/index"
     }
   },
   "files": [
@@ -30,6 +37,7 @@
     "ios",
     "cpp",
     "material-circular-progress-indicator",
+    "cupertino-activity-indicator",
     "*.podspec",
     "!ios/build",
     "!android/build",

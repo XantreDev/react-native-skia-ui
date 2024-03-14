@@ -6,7 +6,7 @@ import {
   IndeterminateMaterialCircularProgressIndicator,
 } from 'react-native-skia-ui/material-circular-progress-indicator';
 import { useSharedValue, withTiming } from 'react-native-reanimated';
-
+import { CupertinoActivityIndicator } from 'react-native-skia-ui/cupertino-activity-indicator';
 export default function App() {
   const progress = useSharedValue(0);
   React.useEffect(() => {
@@ -33,6 +33,11 @@ export default function App() {
         strokeCap="round"
         value={progress}
       />
+      <CupertinoActivityIndicator
+        color="black"
+        progress={progress}
+        radius={50}
+      />
       <Text>IndeterminateMaterialCircularProgressIndicator</Text>
       <IndeterminateMaterialCircularProgressIndicator
         size={40}
@@ -46,6 +51,7 @@ export default function App() {
         strokeWidth={8}
         strokeCap="round"
       />
+      <CupertinoActivityIndicator color="black" radius={50} />
     </View>
   );
 }
