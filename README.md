@@ -1,6 +1,6 @@
 # `react-native-skia-ui`
 
-https://github.com/XantreGodlike/react-native-skia-ui/assets/57757211/3df2a22a-4dc0-4282-8f04-e3a16d361184
+[showcase.webm](https://github.com/XantreGodlike/react-native-skia-ui/assets/57757211/f9579007-d8aa-438c-8083-915c8fb2ad41)
 
 Cross platform UI primitives implemented with `@shopify/react-native-skia`.
 This library provides functionality of system UI components like `ActivityIndicator` for Android, IOS and Web.
