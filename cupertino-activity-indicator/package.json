@@ -1,0 +1,6 @@
+{
+  "react-native": "../src/cupertino-activity-indicator/index",
+  "main": "../lib/commonjs/cupertino-activity-indicator/index",
+  "module": "../lib/module/cupertino-activity-indicator/index",
+  "types": "../lib/typescript/src/cupertino-activity-indicator/index.d.ts"
+}

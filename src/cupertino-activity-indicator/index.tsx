@@ -108,7 +108,7 @@ type InternalProps = {
 };
 
 export type CupertinoActivityIndicatorProps = {
-  color: string;
+  color: PlainValueOrAnimatedValue<string>;
   /**
    * Whether to show the indicator (true, the default) or hide it (false).
    * @default true
@@ -120,16 +120,20 @@ export type CupertinoActivityIndicatorProps = {
    * Defaults to 10 pixels.
    */
   radius?: PlainValueOrAnimatedValue<number>;
-  /**
-   * Determines the percentage of spinner ticks that will be shown. Typical usage would
-   * display all ticks, however, this allows for more fine-grained control such as
-   * during pull-to-refresh when the drag-down action shows one tick at a time as
-   * the user continues to drag down.
-   *
-   * Defaults to one. Must be between zero and one, inclusive.
-   */
-  progress?: PlainValueOrAnimatedValue<number>;
 };
+
+export type CupertinoActivityIndicatorPartiallyRevealedProps =
+  CupertinoActivityIndicatorProps & {
+    /**
+     * Determines the percentage of spinner ticks that will be shown. Typical usage would
+     * display all ticks, however, this allows for more fine-grained control such as
+     * during pull-to-refresh when the drag-down action shows one tick at a time as
+     * the user continues to drag down.
+     *
+     * Must be between zero and one, inclusive.
+     */
+    progress: PlainValueOrAnimatedValue<number>;
+  };
 
 const _Content = (props: InternalProps) => {
   const animationValue = useDuration({
@@ -167,16 +171,35 @@ const _Content = (props: InternalProps) => {
   );
 };
 
-export const CupertinoActivityIndicator = (
+const CupertinoActivityIndicator_ = (
   props: CupertinoActivityIndicatorProps
 ) => {
-  const { color, animating, radius, progress } = props;
-  return (
-    <_Content
-      color={useToSharedValue(color)}
-      animating={useToSharedValueOptional(animating, true)}
-      radius={useToSharedValueOptional(radius, _kDefaultIndicatorRadius)}
-      progress={useToSharedValueOptional(progress, 1)}
-    />
-  );
+  const { color, animating, radius } = props;
+
+  return _Content({
+    color: useToSharedValue(color),
+    animating: useToSharedValueOptional(animating, true),
+    radius: useToSharedValueOptional(radius, _kDefaultIndicatorRadius),
+    progress: useToSharedValue(1),
+  });
 };
+
+const CupertinoActivityIndicatorPartial = (
+  props: CupertinoActivityIndicatorPartiallyRevealedProps
+) => {
+  const { color, animating, radius, progress } = props;
+
+  return _Content({
+    color: useToSharedValue(color),
+    animating: useToSharedValueOptional(animating, true),
+    radius: useToSharedValueOptional(radius, _kDefaultIndicatorRadius),
+    progress: useToSharedValue(progress),
+  });
+};
+
+export const CupertinoActivityIndicator = Object.assign(
+  CupertinoActivityIndicator_,
+  {
+    PartiallyRevealed: CupertinoActivityIndicatorPartial,
+  }
+);

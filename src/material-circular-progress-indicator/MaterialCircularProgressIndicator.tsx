@@ -124,7 +124,7 @@ type InternalProps = {
   strokeAlign?: number;
 };
 
-const Content_ = ({
+const _Content = ({
   size: _size,
   strokeWidth,
   value,
@@ -209,11 +209,6 @@ export type MaterialCircularProgressIndicatorProps = SetOptional<
   InternalOrSharedProps,
   DefaultedKeys | 'stopped' | 'value'
 >;
-/*
-type SetRequiredAndNonNullable<T, K extends keyof T> = SetRequired<
-  SetNonNullable<T, K>,
-  K
->; */
 
 export type DeterminateMaterialCircularProgressIndicatorProps = SetOptional<
   SetNonNullable<Omit<InternalOrSharedProps, 'stopped'>, 'value'>,
@@ -225,17 +220,10 @@ export type IndeterminateMaterialCircularProgressIndicatorProps = SetOptional<
   DefaultedKeys | 'stopped'
 >;
 
-/**
- *
- * @description Component has two modes: determinate and indeterminate. Which are controlled by the `value` prop.
- * If `value` is undefined, the progress indicator will be indeterminate.
- * If `value` is a number between 0 and 1, the progress indicator will be determinate.
- * Not all props applies to both modes. For more type safety, use `DeterminateMaterialCircularProgressIndicator` and `IndeterminateMaterialCircularProgressIndicator` instead.
- */
-export const MaterialCircularProgressIndicator = (
+const MaterialCircularProgressIndicator_ = (
   props: MaterialCircularProgressIndicatorProps
 ) => (
-  <Content_
+  <_Content
     {...props}
     size={useToSharedValue(props.size)}
     value={useToSharedValue(props.value)}
@@ -246,10 +234,10 @@ export const MaterialCircularProgressIndicator = (
   />
 );
 
-export const IndeterminateMaterialCircularProgressIndicator = (
+const IndeterminateMaterialCircularProgressIndicator = (
   props: IndeterminateMaterialCircularProgressIndicatorProps
 ) => (
-  <Content_
+  <_Content
     {...props}
     size={useToSharedValue(props.size)}
     value={useSharedValue(undefined)}
@@ -260,10 +248,10 @@ export const IndeterminateMaterialCircularProgressIndicator = (
   />
 );
 
-export const DeterminateMaterialCircularProgressIndicator = (
+const DeterminateMaterialCircularProgressIndicator = (
   props: DeterminateMaterialCircularProgressIndicatorProps
 ) => (
-  <Content_
+  <_Content
     {...props}
     size={useToSharedValue(props.size)}
     value={useToSharedValue(props.value)}
@@ -273,3 +261,31 @@ export const DeterminateMaterialCircularProgressIndicator = (
     valueColor={useToSharedValue(props.valueColor)}
   />
 );
+
+/**
+ *
+ * @description Component has two modes: determinate and indeterminate. Which are controlled by the `value` prop.
+ * If `value` is undefined, the progress indicator will be indeterminate.
+ * If `value` is a number between 0 and 1, the progress indicator will be determinate.
+ *
+ *
+ * Not all props applies to both modes. For more type safety, use `MaterialCircularProgressIndicator.Determinate` and `MaterialCircularProgressIndicator.Indeterminate` components.
+ */
+export const MaterialCircularProgressIndicator = Object.assign(
+  MaterialCircularProgressIndicator_,
+  {
+    Indeterminate: IndeterminateMaterialCircularProgressIndicator,
+    Determinate: DeterminateMaterialCircularProgressIndicator,
+  }
+);
+
+export {
+  /**
+   * @deprecated use `MaterialCircularProgressIndicator.Indeterminate` instead
+   */
+  IndeterminateMaterialCircularProgressIndicator,
+  /**
+   * @deprecated use `MaterialCircularProgressIndicator.Determinate` instead
+   */
+  DeterminateMaterialCircularProgressIndicator,
+};
